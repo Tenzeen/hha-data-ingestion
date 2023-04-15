@@ -1,30 +1,49 @@
-Instructions: 
-Create a Github repo called ‘hha-data-ingestion’ in your account and write a python script (.py file) that does the following below (Section 1, Section 2, Section 2). 
+Code Explanation
+Section 1: Importing xls file
+Found datasets from Kaggle and combined them on Excel.
+Used pandas to import data from tab1 and tab2 into a dataframe.
 
-Please include a folder in the repo called 'data',  that contains the excel files that you use for Section 1. 
+python
+Copy code
+# Reading and importing tab1 using pandas
+tab1 = pd.read_excel('/Users/tenzi/Documents/Github/hha-data-ingestion/data/data.xlsx', sheet_name='tab1')
 
-Please provide PUBLIC repo,  GitHub URL when submitting this assignment. 
+# Reading and importing tab2 using pandas
+tab2 = pd.read_excel('/Users/tenzi/Documents/Github/hha-data-ingestion/data/data.xlsx', sheet_name='tab2')
+Section 2: Requests package to bring in CMS dataset
+Found API dataset on CMS website.
+Used requests to bring in CMS JSON API.
 
-Please use comments (# or """) in your .py script to let me know what you are doing. 
+python
+Copy code
+# Bringing in CMS JSON API using requests
+apiDataset = requests.get('https://data.cms.gov/data-api/v1/dataset/8d900ef4-0571-42d0-bc8f-82dcf1b5f4c7/data')
 
-If you run into any errors that you can't solve, please take screen shots of those errors, and put them into a 'error' folder inside of your github repo so I can see what they were. 
+# Converting JSON data to Python object
+apiDataset = apiDataset.json()
+Section 3: BigQuery
+BigQuery 1
+Used JSON authentication key to create a client that connects to Google BigQuery. Query/access the first 100 rows of the selected public dataset on Google BigQuery. Retrieve results from the query and put them into a dataframe.
 
-Deliverables: 
- 
-- Section 1: 
-Find or create 1 excel (.xls) file that contains at least two tabs. 
+python
+Copy code
+# Creating a client that connects to Google BigQuery using a JSON authentication key
+client = bigquery.Client.from_service_account_json('/Users/tenzi/Documents/GitHub/hha-data-ingestion/bigquery/tenzin-507-a1863ba676b3.json')
 
-Bring in the first tab as a data frame; label that dataset as ‘tab1’, and a second data frame that represents the 2nd tab of the excel file, name this 'tab2'   
-            Resource: creating via your local computer, Kaggle (https://www.kaggle.com/datasets), healthdata.gov, etc.... 
+# Querying a public dataset on Google BigQuery and retrieving the first 100 rows
+query_job = client.query("SELECT * FROM `bigquery-public-data.chicago_taxi_trips.taxi_trips` LIMIT 100")
 
-- Section 2: 
-Find 1 open source json API via CMS, and bring it in using the 'requests' package ; call the dataset ‘apiDataset’ 
+# Storing the results in a pandas dataframe
+results = query_job.result()
+bigquery1 = pd.DataFrame(results.to_dataframe())
+BigQuery 2
+Querying a public dataset on Google BigQuery and retrieving the first 100 rows. Storing the results in a pandas dataframe.
 
-Resource: https://data.cms.gov/
-import requests 
-import json
-data = requests.get('https://data.cms.gov/data-api/v1/dataset/ad73e4d3-925b-4055-ad9b-7f0015e906c8/data&#39;)
-data = data.json() 
-- Section 3 (TRY YOUR BEST): Brings in 2 open source bigquery datasets; limit your query to get the first 100 rows from each, as either a dataframe or dictionary; please call the first dataset ‘bigquery1’ and the second dataset ‘bigquery2’;  
-Instructions for connecting to bigquery via a client (e.g., python): https://cloud.google.com/bigquery/docs/quickstarts/quickstart-client-libraries 
-Helper youtube video - If you have trouble, I would recommend watching the first couple minutes that walks through how to create the special .json file to connect: https://www.youtube.com/watch?v=iolQX4XJN2A
+python
+Copy code
+# Querying a public dataset on Google BigQuery and retrieving the first 100 rows
+query_job = client.query("SELECT * FROM `bigquery-public-data.chicago_crime.crime` LIMIT 100")
+
+# Storing the results in a pandas dataframe
+results = query_job.result()
+bigquery2 = pd.DataFrame(results.to_dataframe())
