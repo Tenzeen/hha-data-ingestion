@@ -1,4 +1,6 @@
-This code is a Python script that reads data from different sources and stores it in pandas dataframes. The script has three main sections, each of which serves a different purpose.
+The purpose of this assignment was to practice ingesting data using Python.
+
+The python script reads data from different sources and stores it in pandas dataframes. The script has three main sections, each of which serves a different purpose.
 
 In Section 1, the script imports data from two sheets named "tab1" and "tab2" of an Excel file using the pandas library. The two sheets are located in the same file called "data.xlsx". The imported data is stored in two pandas dataframes called "tab1" and "tab2".
 
